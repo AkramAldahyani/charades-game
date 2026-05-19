@@ -2,6 +2,8 @@
 
 **Arabic team-based charades party game** — fully static, works on GitHub Pages with zero setup.
 
+🌐 **Live at: [https://akramaldahyani.github.io/charades-game/](https://akramaldahyani.github.io/charades-game/)**
+
 One player acts out a word without speaking. Their team tries to guess it before the timer runs out. Most points wins!
 
 ---
