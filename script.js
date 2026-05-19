@@ -1,10 +1,127 @@
 /* ============================================
-   مثّلها — Arabic Charades Game
+   مثّلها / Act It Out! — Bilingual Charades Game
    Pure vanilla JS — no dependencies
    ============================================ */
 
-// ============ WORDS DATA ============
-// Add or edit words freely. Each category has many entries.
+// ============ STRINGS (i18n) ============
+const STRINGS = {
+    ar: {
+        gameTitle: 'مثّلها',
+        gameSubtitle: 'لعبة التمثيل الصامت الجماعية',
+        featTeams: 'فريقان',
+        featTimer: 'وقت محدد',
+        featFun: 'متعة بلا حدود',
+        btnStart: 'ابدأ اللعب',
+        btnHowToPlay: 'كيف تلعب؟',
+        howTitle: 'كيف تلعب؟',
+        howStep1: '<strong>قسّموا أنفسكم</strong> إلى فريقين وأدخلوا أسماء الفريقين.',
+        howStep2: '<strong>اختاروا</strong> مدة الجولة وعدد الجولات والفئة.',
+        howStep3: 'عند بدء الدور، يقوم <strong>ممثل من الفريق</strong> بقراءة الكلمة بسرية.',
+        howStep4: 'يحاول الممثل <strong>تمثيل الكلمة دون التحدث</strong> ويحاول فريقه التخمين.',
+        howStep5: 'اضغط <strong>"صح"</strong> عند التخمين الصحيح، أو <strong>"تخطي"</strong> لتجاوز الكلمة.',
+        howStep6: 'عند انتهاء الوقت، <strong>ينتقل الدور</strong> للفريق الآخر.',
+        howStep7: 'الفريق صاحب <strong>أعلى نقاط</strong> في النهاية هو الفائز! 🏆',
+        setupTitle: 'إعدادات اللعبة',
+        cardTeams: 'الفريقان',
+        cardDuration: 'مدة الجولة',
+        cardRounds: 'عدد الجولات',
+        team1Label: 'اسم الفريق الأول',
+        team1Placeholder: 'مثلاً: النمور',
+        team1Default: 'الفريق الأحمر',
+        team2Label: 'اسم الفريق الثاني',
+        team2Placeholder: 'مثلاً: الصقور',
+        team2Default: 'الفريق الأزرق',
+        secLabel: 'ثانية',
+        roundsLabel: 'جولات',
+        btnNextCategory: 'التالي: اختر الفئة',
+        categoriesTitle: 'اختر الفئة',
+        wordsCount: 'كلمة',
+        readyGetReady: 'استعدوا!',
+        readyInstructions: 'اختاروا ممثلاً يقوم بالتمثيل،<br>والباقي يحاولون التخمين',
+        btnStartTurn: 'ابدأ الدور',
+        roundBadge: (r, t) => `الجولة ${r} من ${t}`,
+        countdownLabel: 'استعد...',
+        countdownGo: 'ابدأ!',
+        scoreLabel: 'النقاط',
+        btnSkip: 'تخطي',
+        btnCorrect: 'صح',
+        sbRoundBadge: (r) => `انتهت الجولة ${r}`,
+        scoreboardTitle: 'النتائج حتى الآن',
+        scoreUnit: 'نقطة',
+        roundSummary: (team, pts) => `سجل الفريق <strong>${team}</strong> هذه الجولة <strong>${pts}</strong> نقطة!`,
+        btnContinue: 'المتابعة',
+        btnFinalResults: 'النتيجة النهائية',
+        winnerLabel: 'الفائز',
+        tieText: 'تعادل!',
+        winnerScore: (s) => `${s} نقطة`,
+        btnRestart: 'إعادة بنفس الإعدادات',
+        btnHome: 'الصفحة الرئيسية',
+        toastEnterNames: 'الرجاء إدخال اسمي الفريقين',
+        toastDiffNames: 'الرجاء اختيار اسمين مختلفين',
+        backArrow: '→',
+        fwdArrow: '←',
+        pageTitle: 'مثّلها - لعبة التمثيل الصامت',
+    },
+    en: {
+        gameTitle: 'Act It Out!',
+        gameSubtitle: 'The team charades party game',
+        featTeams: '2 Teams',
+        featTimer: 'Timed Rounds',
+        featFun: 'Endless Fun',
+        btnStart: 'Start Playing',
+        btnHowToPlay: 'How to Play?',
+        howTitle: 'How to Play?',
+        howStep1: '<strong>Split into two teams</strong> and enter both team names.',
+        howStep2: '<strong>Choose</strong> round duration, number of rounds, and a category.',
+        howStep3: 'On each turn, one player <strong>secretly reads the word</strong>.',
+        howStep4: 'They act it out <strong>without speaking</strong> while their team guesses.',
+        howStep5: 'Press <strong>"Correct"</strong> when guessed right, or <strong>"Skip"</strong> to pass.',
+        howStep6: 'When time is up, <strong>the other team</strong> takes their turn.',
+        howStep7: 'The team with the <strong>most points</strong> at the end wins! 🏆',
+        setupTitle: 'Game Setup',
+        cardTeams: 'Teams',
+        cardDuration: 'Round Duration',
+        cardRounds: 'Number of Rounds',
+        team1Label: 'Team 1 Name',
+        team1Placeholder: 'e.g. The Tigers',
+        team1Default: 'Red Team',
+        team2Label: 'Team 2 Name',
+        team2Placeholder: 'e.g. The Eagles',
+        team2Default: 'Blue Team',
+        secLabel: 'sec',
+        roundsLabel: 'rounds',
+        btnNextCategory: 'Next: Pick Category',
+        categoriesTitle: 'Choose a Category',
+        wordsCount: 'words',
+        readyGetReady: 'Get Ready!',
+        readyInstructions: 'Pick an actor from your team,<br>the rest try to guess!',
+        btnStartTurn: 'Start Turn',
+        roundBadge: (r, t) => `Round ${r} of ${t}`,
+        countdownLabel: 'Get ready...',
+        countdownGo: 'Go!',
+        scoreLabel: 'Score',
+        btnSkip: 'Skip',
+        btnCorrect: 'Correct',
+        sbRoundBadge: (r) => `Round ${r} Over`,
+        scoreboardTitle: 'Scores So Far',
+        scoreUnit: 'pts',
+        roundSummary: (team, pts) => `<strong>${team}</strong> scored <strong>${pts}</strong> points this round!`,
+        btnContinue: 'Continue',
+        btnFinalResults: 'Final Results',
+        winnerLabel: 'Winner',
+        tieText: "It's a Tie!",
+        winnerScore: (s) => `${s} pts`,
+        btnRestart: 'Play Again (Same Settings)',
+        btnHome: 'Home',
+        toastEnterNames: 'Please enter both team names',
+        toastDiffNames: 'Please choose different team names',
+        backArrow: '←',
+        fwdArrow: '→',
+        pageTitle: 'Act It Out! - Charades Game',
+    }
+};
+
+// ============ ARABIC WORDS DATA ============
 const WORDS = {
     movies: [
         "تيتانيك", "الأسد الملك", "علاء الدين", "هاري بوتر", "سيد الخواتم",
@@ -82,14 +199,14 @@ const WORDS = {
         "عادل إمام", "محمد رمضان", "أحمد حلمي", "أحمد السقا", "كريم عبد العزيز",
         "نور الشريف", "محمود ياسين", "فاتن حمامة", "عمر الشريف", "يوسف شاهين",
         "ليلى علوي", "يسرا", "نيللي كريم", "منى زكي", "هند صبري",
-        "نانسي عجرم", "أحلام", "أصالة", "شيرين", "تامر عاشور",
+        "أحلام", "أصالة", "شيرين", "تامر عاشور",
         "عبد المجيد عبد الله", "محمد حماقي", "البرت أينشتاين", "ستيف جوبز", "بيل غيتس",
         "إيلون ماسك", "نيلسون مانديلا", "غاندي", "نابليون", "كليوباترا",
         "صلاح الدين الأيوبي", "ابن سينا", "ابن خلدون", "نجيب محفوظ"
     ]
 };
 
-// ============ CATEGORIES META ============
+// ============ ARABIC CATEGORIES META ============
 const CATEGORIES = [
     { id: 'movies',      name: 'أفلام',           emoji: '🎬', color: 'linear-gradient(135deg, #ef4444, #b91c1c)' },
     { id: 'animals',     name: 'حيوانات',         emoji: '🦁', color: 'linear-gradient(135deg, #f59e0b, #d97706)' },
@@ -99,8 +216,100 @@ const CATEGORIES = [
     { id: 'celebrities', name: 'شخصيات مشهورة',   emoji: '⭐', color: 'linear-gradient(135deg, #a855f7, #7e22ce)' }
 ];
 
+// ============ ENGLISH WORDS DATA ============
+const WORDS_EN = {
+    movies: [
+        "Titanic", "The Lion King", "Aladdin", "Harry Potter", "Lord of the Rings",
+        "Spider-Man", "Iron Man", "Batman", "Superman", "The Joker",
+        "Avengers", "Star Wars", "The Matrix", "Pirates of the Caribbean", "Indiana Jones",
+        "Rocky", "The Godfather", "Forrest Gump", "Jurassic Park", "Beauty and the Beast",
+        "Frozen", "Shrek", "Finding Nemo", "Toy Story", "Kung Fu Panda",
+        "Madagascar", "Ice Age", "WALL-E", "Up", "Coco",
+        "Avatar", "The Sixth Sense", "Mission Impossible", "James Bond", "Fast and Furious",
+        "Transformers", "Inception", "Interstellar", "The Martian", "Gravity",
+        "Black Panther", "Wonder Woman", "Doctor Strange", "Thor", "The Dark Knight",
+        "Gladiator", "Braveheart", "Schindler's List", "The Revenant", "Dune"
+    ],
+    animals: [
+        "Lion", "Tiger", "Elephant", "Giraffe", "Gazelle",
+        "Camel", "Horse", "Donkey", "Cow", "Sheep",
+        "Goat", "Dog", "Cat", "Rabbit", "Mouse",
+        "Monkey", "Gorilla", "Bear", "Wolf", "Fox",
+        "Snake", "Crocodile", "Turtle", "Frog", "Lizard",
+        "Whale", "Dolphin", "Shark", "Octopus", "Crab",
+        "Eagle", "Hawk", "Owl", "Parrot", "Peacock",
+        "Penguin", "Ostrich", "Pigeon", "Duck", "Chicken",
+        "Cheetah", "Rhinoceros", "Hippopotamus", "Kangaroo", "Koala",
+        "Panda", "Bull", "Pig", "Bee", "Butterfly",
+        "Ant", "Grasshopper", "Scorpion", "Spider", "Bat"
+    ],
+    jobs: [
+        "Doctor", "Nurse", "Engineer", "Teacher", "Chef",
+        "Baker", "Carpenter", "Blacksmith", "Mechanic", "Electrician",
+        "Plumber", "Barber", "Tailor", "Pilot", "Flight Attendant",
+        "Sailor", "Fisherman", "Farmer", "Firefighter", "Police Officer",
+        "Soldier", "Judge", "Lawyer", "Accountant", "Journalist",
+        "Presenter", "Photographer", "Painter", "Sculptor", "Musician",
+        "Singer", "Actor", "Dancer", "Soccer Player", "Referee",
+        "Coach", "Salesperson", "Waiter", "Driver", "Mailman",
+        "Security Guard", "Scientist", "Writer", "Poet", "Translator",
+        "Dentist", "Pharmacist", "Surgeon", "Architect", "Programmer",
+        "Designer", "Hairdresser", "Gardener", "Astronaut", "Librarian"
+    ],
+    daily: [
+        "Phone", "Computer", "Television", "Refrigerator", "Washing Machine",
+        "Iron", "Broom", "Microwave", "Oven", "Blender",
+        "Chair", "Table", "Bed", "Wardrobe", "Mirror",
+        "Clock", "Glasses", "Wallet", "Keys", "Bag",
+        "Pen", "Book", "Notebook", "Eraser", "Ruler",
+        "Spoon", "Fork", "Knife", "Plate", "Cup",
+        "Kettle", "Pot", "Pan", "Toothbrush", "Toothpaste",
+        "Soap", "Shampoo", "Towel", "Pillow", "Blanket",
+        "Shoes", "Shirt", "Pants", "Jacket", "Hat",
+        "Socks", "Gloves", "Scarf", "Belt", "Tie",
+        "Umbrella", "Box", "Bottle", "Screwdriver", "Hammer",
+        "Nail", "Rope", "Ladder", "Candle", "Lamp"
+    ],
+    sports: [
+        "Soccer", "Basketball", "Volleyball", "Handball", "Tennis",
+        "Table Tennis", "Swimming", "Diving", "Running", "Jumping",
+        "Boxing", "Wrestling", "Karate", "Taekwondo", "Judo",
+        "Horse Riding", "Cycling", "Fishing", "Skiing", "Ice Skating",
+        "Water Skiing", "Surfing", "Billiards", "Bowling", "Golf",
+        "Hockey", "Cricket", "Baseball", "Rugby", "Motorcycle Racing",
+        "Car Racing", "Weightlifting", "Gymnastics", "Yoga", "Pilates",
+        "Archery", "Mountain Climbing", "Skydiving", "Jump Rope", "High Jump",
+        "Long Jump", "Javelin", "Discus", "Marathon", "Rowing",
+        "Squash", "Badminton", "Chess", "Paddle Tennis", "Fencing"
+    ],
+    celebrities: [
+        "Mohamed Salah", "Cristiano Ronaldo", "Lionel Messi", "Neymar", "Kylian Mbappe",
+        "Zinedine Zidane", "Pele", "Maradona", "Muhammad Ali", "Michael Jackson",
+        "Elvis Presley", "Beyonce", "Taylor Swift", "Adele", "Rihanna",
+        "Madonna", "Lady Gaga", "Ed Sheeran", "Justin Bieber", "Eminem",
+        "Brad Pitt", "Angelina Jolie", "Tom Hanks", "Leonardo DiCaprio", "Johnny Depp",
+        "Will Smith", "Keanu Reeves", "Denzel Washington", "Meryl Streep", "Oprah Winfrey",
+        "Albert Einstein", "Stephen Hawking", "Steve Jobs", "Bill Gates", "Elon Musk",
+        "Nelson Mandela", "Gandhi", "Napoleon", "Cleopatra", "Shakespeare",
+        "Isaac Newton", "Charles Darwin", "Abraham Lincoln", "Martin Luther King", "Marie Curie",
+        "Mozart", "Beethoven", "Picasso", "Michelangelo", "Walt Disney",
+        "Charlie Chaplin", "Bruce Lee", "Arnold Schwarzenegger", "Robert Downey Jr", "Dwayne Johnson"
+    ]
+};
+
+// ============ ENGLISH CATEGORIES META ============
+const CATEGORIES_EN = [
+    { id: 'movies',      name: 'Movies',        emoji: '🎬', color: 'linear-gradient(135deg, #ef4444, #b91c1c)' },
+    { id: 'animals',     name: 'Animals',        emoji: '🦁', color: 'linear-gradient(135deg, #f59e0b, #d97706)' },
+    { id: 'jobs',        name: 'Jobs',           emoji: '👔', color: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' },
+    { id: 'daily',       name: 'Daily Objects',  emoji: '🏠', color: 'linear-gradient(135deg, #10b981, #047857)' },
+    { id: 'sports',      name: 'Sports',         emoji: '⚽', color: 'linear-gradient(135deg, #06b6d4, #0e7490)' },
+    { id: 'celebrities', name: 'Famous People',  emoji: '⭐', color: 'linear-gradient(135deg, #a855f7, #7e22ce)' }
+];
+
 // ============ GAME STATE ============
 const state = {
+    lang: 'ar',
     teams: [
         { name: 'الفريق الأحمر', score: 0, emoji: '🔥' },
         { name: 'الفريق الأزرق', score: 0, emoji: '💧' }
@@ -108,10 +317,10 @@ const state = {
     duration: 45,
     totalRounds: 4,
     categoryId: null,
-    currentRound: 1,          // 1..totalRounds
-    currentTeamIdx: 0,        // 0 or 1
-    turnsThisRound: 0,        // how many of the 2 teams have played this round
-    roundScores: [0, 0],      // points scored by current team during current turn
+    currentRound: 1,
+    currentTeamIdx: 0,
+    turnsThisRound: 0,
+    roundScores: [0, 0],
     wordPool: [],
     wordIdx: 0,
     currentWord: '',
@@ -124,8 +333,18 @@ const state = {
 const $ = (id) => document.getElementById(id);
 const $$ = (sel) => document.querySelectorAll(sel);
 
+function s() { return STRINGS[state.lang]; }
+
+function getWords() {
+    return (state.lang === 'ar' ? WORDS : WORDS_EN)[state.categoryId] || [];
+}
+
+function getCategories() {
+    return state.lang === 'ar' ? CATEGORIES : CATEGORIES_EN;
+}
+
 function showScreen(id) {
-    $$('.screen').forEach(s => s.classList.remove('active'));
+    $$('.screen').forEach(sc => sc.classList.remove('active'));
     const target = $(id);
     if (target) target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -148,6 +367,51 @@ function shuffle(arr) {
     return a;
 }
 
+// ============ LANGUAGE ============
+function applyLanguage(lang) {
+    state.lang = lang;
+    const str = STRINGS[lang];
+    const isRTL = lang === 'ar';
+
+    document.documentElement.lang = lang;
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.title = str.pageTitle;
+
+    // Update all static text nodes
+    $$('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (str[key] !== undefined) el.textContent = str[key];
+    });
+
+    // Update all HTML nodes (with <strong> etc.)
+    $$('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (str[key] !== undefined) el.innerHTML = str[key];
+    });
+
+    // Update input placeholders and defaults
+    const t1 = $('team1');
+    const t2 = $('team2');
+    const otherStr = STRINGS[lang === 'ar' ? 'en' : 'ar'];
+    if (t1.value === otherStr.team1Default || t1.value === '') t1.value = str.team1Default;
+    if (t2.value === otherStr.team2Default || t2.value === '') t2.value = str.team2Default;
+    t1.placeholder = str.team1Placeholder;
+    t2.placeholder = str.team2Placeholder;
+
+    // Update directional arrows
+    $$('.back-btn').forEach(btn => { btn.textContent = str.backArrow; });
+    $$('.btn-arrow').forEach(el => { el.textContent = str.fwdArrow; });
+
+    // Update lang toggle buttons
+    $('lang-ar').classList.toggle('active', lang === 'ar');
+    $('lang-en').classList.toggle('active', lang === 'en');
+
+    renderCategories();
+}
+
+function setLangAr() { applyLanguage('ar'); }
+function setLangEn() { applyLanguage('en'); }
+
 // ============ HOME / NAVIGATION ============
 function goHome() {
     stopTimer();
@@ -160,17 +424,10 @@ function goSetup() {
 }
 
 function goCategories() {
-    // Validate setup
     const t1 = $('team1').value.trim();
     const t2 = $('team2').value.trim();
-    if (!t1 || !t2) {
-        showToast('الرجاء إدخال اسمي الفريقين');
-        return;
-    }
-    if (t1 === t2) {
-        showToast('الرجاء اختيار اسمين مختلفين');
-        return;
-    }
+    if (!t1 || !t2) { showToast(s().toastEnterNames); return; }
+    if (t1 === t2)  { showToast(s().toastDiffNames); return; }
     state.teams[0].name = t1;
     state.teams[1].name = t2;
     renderCategories();
@@ -204,15 +461,17 @@ function setupOptionButtons() {
 function renderCategories() {
     const grid = $('categories-grid');
     grid.innerHTML = '';
-    CATEGORIES.forEach(cat => {
+    const cats = getCategories();
+    const words = state.lang === 'ar' ? WORDS : WORDS_EN;
+    cats.forEach(cat => {
         const card = document.createElement('button');
         card.className = 'category-card';
         card.style.setProperty('--cat-color', cat.color);
-        const count = WORDS[cat.id] ? WORDS[cat.id].length : 0;
+        const count = words[cat.id] ? words[cat.id].length : 0;
         card.innerHTML = `
             <div class="category-emoji">${cat.emoji}</div>
             <div class="category-name">${cat.name}</div>
-            <div class="category-count">${count} كلمة</div>
+            <div class="category-count">${count} ${s().wordsCount}</div>
         `;
         card.addEventListener('click', () => selectCategory(cat.id));
         grid.appendChild(card);
@@ -235,14 +494,11 @@ function startGame() {
 }
 
 function prepareTurn() {
-    // Build a fresh shuffled word pool for this turn
-    state.wordPool = shuffle(WORDS[state.categoryId] || []);
+    state.wordPool = shuffle(getWords());
     state.wordIdx = 0;
     state.roundScores = [0, 0];
 
-    // Ready screen
-    $('ready-round').textContent = state.currentRound;
-    $('ready-total').textContent = state.totalRounds;
+    $('ready-round-badge').textContent = s().roundBadge(state.currentRound, state.totalRounds);
     const team = state.teams[state.currentTeamIdx];
     $('ready-team-name').textContent = team.name;
     $('ready-avatar').textContent = team.emoji;
@@ -255,7 +511,6 @@ function prepareTurn() {
 }
 
 function startTurn() {
-    // 3-2-1 countdown then go to game
     showScreen('screen-countdown');
     let n = 3;
     const cd = $('countdown-num');
@@ -272,7 +527,7 @@ function startTurn() {
             void cd.offsetWidth;
             cd.style.animation = 'countdownPop 0.9s var(--ease)';
         } else if (n === 0) {
-            cd.textContent = 'ابدأ!';
+            cd.textContent = s().countdownGo;
             cd.style.animation = 'none';
             void cd.offsetWidth;
             cd.style.animation = 'countdownPop 0.9s var(--ease)';
@@ -285,7 +540,6 @@ function startTurn() {
 }
 
 function beginTurn() {
-    // Setup game screen
     const team = state.teams[state.currentTeamIdx];
     const badge = $('game-team-badge');
     badge.classList.remove('team-1', 'team-2');
@@ -315,21 +569,15 @@ function startTimer() {
 }
 
 function stopTimer() {
-    if (state.timerId) {
-        clearInterval(state.timerId);
-        state.timerId = null;
-    }
-    if (state.countdownId) {
-        clearInterval(state.countdownId);
-        state.countdownId = null;
-    }
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+    if (state.countdownId) { clearInterval(state.countdownId); state.countdownId = null; }
 }
 
 function updateTimerUI() {
     const num = $('timer-number');
     const wrap = num.parentElement;
     const prog = $('timer-progress');
-    const circumference = 2 * Math.PI * 54; // 339.292
+    const circumference = 2 * Math.PI * 54;
 
     num.textContent = state.timeLeft;
 
@@ -350,15 +598,13 @@ function updateTimerUI() {
 function showWord() {
     const word = state.wordPool[state.wordIdx];
     if (!word) {
-        // Shouldn't happen often, but reshuffle if exhausted
-        state.wordPool = shuffle(WORDS[state.categoryId] || []);
+        state.wordPool = shuffle(getWords());
         state.wordIdx = 0;
     }
     state.currentWord = state.wordPool[state.wordIdx];
     const el = $('word-text');
     el.textContent = state.currentWord;
     el.classList.remove('flash-correct', 'flash-skip');
-    // Force reflow to restart animation
     void el.offsetWidth;
     el.style.animation = 'none';
     void el.offsetWidth;
@@ -370,7 +616,6 @@ function correctWord() {
     state.teams[state.currentTeamIdx].score++;
     state.roundScores[state.currentTeamIdx]++;
     $('game-score').textContent = state.teams[state.currentTeamIdx].score;
-
     const el = $('word-text');
     el.classList.add('flash-correct');
     setTimeout(() => nextWord(), 250);
@@ -386,8 +631,7 @@ function skipWord() {
 function nextWord() {
     state.wordIdx++;
     if (state.wordIdx >= state.wordPool.length) {
-        // Reshuffle to keep playing if we run out
-        state.wordPool = shuffle(WORDS[state.categoryId] || []);
+        state.wordPool = shuffle(getWords());
         state.wordIdx = 0;
     }
     showWord();
@@ -402,8 +646,9 @@ function endTurn() {
 function showScoreboard() {
     const t1 = state.teams[0];
     const t2 = state.teams[1];
+    const str = s();
 
-    $('sb-round').textContent = state.currentRound;
+    $('sb-round-badge').textContent = str.sbRoundBadge(state.currentRound);
     $('sb-team1-name').textContent = t1.name;
     $('sb-team2-name').textContent = t2.name;
     $('sb-team1-score').textContent = t1.score;
@@ -414,23 +659,18 @@ function showScoreboard() {
     if (t1.score > t2.score) $('sb-team1-card').classList.add('leading');
     else if (t2.score > t1.score) $('sb-team2-card').classList.add('leading');
 
-    // Summary of the team that just played
     const team = state.teams[state.currentTeamIdx];
     const points = state.roundScores[state.currentTeamIdx];
-    $('sb-this-team').textContent = team.name;
-    $('sb-this-points').textContent = points;
+    $('round-summary').innerHTML = str.roundSummary(team.name, points);
 
     const isGameOver = (state.turnsThisRound >= 2 && state.currentRound >= state.totalRounds);
-    const btn = $('sb-continue-btn');
-    btn.querySelector('span:first-child').textContent = isGameOver ? 'النتيجة النهائية' : 'المتابعة';
+    $('sb-continue-span').textContent = isGameOver ? str.btnFinalResults : str.btnContinue;
 
     showScreen('screen-scoreboard');
 }
 
 function nextTurn() {
-    // Advance round/team
     if (state.turnsThisRound >= 2) {
-        // both teams played this round
         if (state.currentRound >= state.totalRounds) {
             endGame();
             return;
@@ -448,25 +688,23 @@ function nextTurn() {
 function endGame() {
     const t1 = state.teams[0];
     const t2 = state.teams[1];
+    const str = s();
 
-    let winnerName, winnerScore;
+    let winnerName, winnerPoints;
     const winnerEl = $('winner-name');
     winnerEl.classList.remove('tie-mode');
 
     if (t1.score > t2.score) {
-        winnerName = t1.name;
-        winnerScore = t1.score;
+        winnerName = t1.name; winnerPoints = t1.score;
     } else if (t2.score > t1.score) {
-        winnerName = t2.name;
-        winnerScore = t2.score;
+        winnerName = t2.name; winnerPoints = t2.score;
     } else {
-        winnerName = 'تعادل!';
-        winnerScore = t1.score;
+        winnerName = str.tieText; winnerPoints = t1.score;
         winnerEl.classList.add('tie-mode');
     }
 
     winnerEl.textContent = winnerName;
-    $('winner-score').textContent = `${winnerScore} نقطة`;
+    $('winner-score').textContent = str.winnerScore(winnerPoints);
 
     $('final-name-1').textContent = t1.name;
     $('final-name-2').textContent = t2.name;
@@ -488,8 +726,7 @@ function launchConfetti() {
     const container = $('confetti');
     container.innerHTML = '';
     const colors = ['#facc15', '#fb923c', '#f472b6', '#3b82f6', '#22c55e', '#ef4444', '#a855f7'];
-    const count = 60;
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 60; i++) {
         const piece = document.createElement('div');
         piece.className = 'confetti-piece';
         piece.style.left = Math.random() * 100 + '%';
@@ -503,32 +740,29 @@ function launchConfetti() {
     }
 }
 
-function restartSameSettings() {
-    startGame();
-}
+function restartSameSettings() { startGame(); }
 
 // ============ ACTION ROUTER ============
 const ACTIONS = {
-    'go-home': goHome,
-    'go-setup': goSetup,
+    'go-home':       goHome,
+    'go-setup':      goSetup,
     'go-categories': goCategories,
-    'show-how': showHow,
-    'close-how': closeHow,
-    'start-turn': startTurn,
-    'correct-word': correctWord,
-    'skip-word': skipWord,
-    'next-turn': nextTurn,
-    'restart-same': restartSameSettings
+    'show-how':      showHow,
+    'close-how':     closeHow,
+    'start-turn':    startTurn,
+    'correct-word':  correctWord,
+    'skip-word':     skipWord,
+    'next-turn':     nextTurn,
+    'restart-same':  restartSameSettings,
+    'set-lang-ar':   setLangAr,
+    'set-lang-en':   setLangEn,
 };
 
 function handleAction(e) {
     const el = e.target.closest('[data-action]');
     if (!el) return;
     const fn = ACTIONS[el.dataset.action];
-    if (fn) {
-        e.preventDefault();
-        fn();
-    }
+    if (fn) { e.preventDefault(); fn(); }
 }
 
 // ============ KEYBOARD SHORTCUTS ============
@@ -536,7 +770,6 @@ function onKey(e) {
     const isGame = $('screen-game').classList.contains('active');
     if (isGame && state.timeLeft > 0) {
         if (e.key === 'ArrowRight' || e.code === 'Space' || e.key === 'Enter') {
-            // Right arrow in RTL maps to "correct" (the primary positive action button is on the right in our layout)
             e.preventDefault();
             correctWord();
         } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
@@ -544,8 +777,6 @@ function onKey(e) {
             skipWord();
         }
     }
-
-    // Close modal on Escape
     if (e.key === 'Escape' && $('modal-how').classList.contains('active')) {
         closeHow();
     }
@@ -555,14 +786,11 @@ function onKey(e) {
 function init() {
     document.body.addEventListener('click', handleAction);
     document.addEventListener('keydown', onKey);
-
-    // Close modal on backdrop click
     $('modal-how').addEventListener('click', (e) => {
         if (e.target.id === 'modal-how') closeHow();
     });
-
     setupOptionButtons();
-    renderCategories();
+    applyLanguage('ar');
     showScreen('screen-home');
 }
 

@@ -1382,3 +1382,47 @@ body {
         transition-duration: 0.001s !important;
     }
 }
+
+/* ============ Language Switcher ============ */
+.lang-switcher {
+    display: flex;
+    gap: 8px;
+    align-self: flex-end;
+    margin-bottom: -8px;
+}
+
+.lang-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    padding: 7px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all var(--t-fast) var(--ease);
+    backdrop-filter: blur(8px);
+}
+
+.lang-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-color: transparent;
+    color: var(--white);
+    box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+.lang-btn:hover:not(.active) {
+    background: var(--card-bg-hover);
+    color: var(--text);
+}
+
+/* ============ LTR overrides ============ */
+[dir="ltr"] .modal-close {
+    left: auto;
+    right: 14px;
+}
+
+[dir="ltr"] .btn:hover .btn-arrow {
+    transform: translateX(4px);
+}

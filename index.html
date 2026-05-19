@@ -21,33 +21,38 @@
         <!-- ============ HOME SCREEN ============ -->
         <section class="screen active" id="screen-home">
             <div class="home-content">
+                <div class="lang-switcher">
+                    <button class="lang-btn active" id="lang-ar" data-action="set-lang-ar">العربية</button>
+                    <button class="lang-btn" id="lang-en" data-action="set-lang-en">English</button>
+                </div>
+
                 <div class="logo-wrapper">
                     <div class="logo-emoji">🎭</div>
-                    <h1 class="game-title">مثّلها</h1>
-                    <p class="game-subtitle">لعبة التمثيل الصامت الجماعية</p>
+                    <h1 class="game-title" data-i18n="gameTitle">مثّلها</h1>
+                    <p class="game-subtitle" data-i18n="gameSubtitle">لعبة التمثيل الصامت الجماعية</p>
                 </div>
 
                 <div class="home-features">
                     <div class="feature-pill">
                         <span class="feature-icon">👥</span>
-                        <span>فريقان</span>
+                        <span data-i18n="featTeams">فريقان</span>
                     </div>
                     <div class="feature-pill">
                         <span class="feature-icon">⏱️</span>
-                        <span>وقت محدد</span>
+                        <span data-i18n="featTimer">وقت محدد</span>
                     </div>
                     <div class="feature-pill">
                         <span class="feature-icon">🏆</span>
-                        <span>متعة بلا حدود</span>
+                        <span data-i18n="featFun">متعة بلا حدود</span>
                     </div>
                 </div>
 
                 <button class="btn btn-primary btn-large" data-action="go-setup">
-                    <span>ابدأ اللعب</span>
+                    <span data-i18n="btnStart">ابدأ اللعب</span>
                     <span class="btn-arrow">←</span>
                 </button>
 
-                <button class="btn btn-ghost" data-action="show-how">كيف تلعب؟</button>
+                <button class="btn btn-ghost" data-action="show-how" data-i18n="btnHowToPlay">كيف تلعب؟</button>
             </div>
         </section>
 
@@ -55,15 +60,15 @@
         <div class="modal" id="modal-how">
             <div class="modal-content">
                 <button class="modal-close" data-action="close-how">✕</button>
-                <h2>كيف تلعب؟</h2>
+                <h2 data-i18n="howTitle">كيف تلعب؟</h2>
                 <ol class="how-list">
-                    <li><strong>قسّموا أنفسكم</strong> إلى فريقين وأدخلوا أسماء الفريقين.</li>
-                    <li><strong>اختاروا</strong> مدة الجولة وعدد الجولات والفئة.</li>
-                    <li>عند بدء الدور، يقوم <strong>ممثل من الفريق</strong> بقراءة الكلمة بسرية.</li>
-                    <li>يحاول الممثل <strong>تمثيل الكلمة دون التحدث</strong> ويحاول فريقه التخمين.</li>
-                    <li>اضغط <strong>"صح"</strong> عند التخمين الصحيح، أو <strong>"تخطي"</strong> لتجاوز الكلمة.</li>
-                    <li>عند انتهاء الوقت، <strong>ينتقل الدور</strong> للفريق الآخر.</li>
-                    <li>الفريق صاحب <strong>أعلى نقاط</strong> في النهاية هو الفائز! 🏆</li>
+                    <li data-i18n-html="howStep1"><strong>قسّموا أنفسكم</strong> إلى فريقين وأدخلوا أسماء الفريقين.</li>
+                    <li data-i18n-html="howStep2"><strong>اختاروا</strong> مدة الجولة وعدد الجولات والفئة.</li>
+                    <li data-i18n-html="howStep3">عند بدء الدور، يقوم <strong>ممثل من الفريق</strong> بقراءة الكلمة بسرية.</li>
+                    <li data-i18n-html="howStep4">يحاول الممثل <strong>تمثيل الكلمة دون التحدث</strong> ويحاول فريقه التخمين.</li>
+                    <li data-i18n-html="howStep5">اضغط <strong>"صح"</strong> عند التخمين الصحيح، أو <strong>"تخطي"</strong> لتجاوز الكلمة.</li>
+                    <li data-i18n-html="howStep6">عند انتهاء الوقت، <strong>ينتقل الدور</strong> للفريق الآخر.</li>
+                    <li data-i18n-html="howStep7">الفريق صاحب <strong>أعلى نقاط</strong> في النهاية هو الفائز! 🏆</li>
                 </ol>
             </div>
         </div>
@@ -72,67 +77,67 @@
         <section class="screen" id="screen-setup">
             <div class="screen-header">
                 <button class="back-btn" data-action="go-home">→</button>
-                <h2>إعدادات اللعبة</h2>
+                <h2 data-i18n="setupTitle">إعدادات اللعبة</h2>
             </div>
 
             <div class="setup-content">
                 <div class="card">
-                    <h3 class="card-title"><span>👥</span> الفريقان</h3>
+                    <h3 class="card-title"><span>👥</span> <span data-i18n="cardTeams">الفريقان</span></h3>
                     <div class="team-inputs">
                         <div class="input-group team-input team-a">
-                            <label for="team1">اسم الفريق الأول</label>
+                            <label for="team1" data-i18n="team1Label">اسم الفريق الأول</label>
                             <input type="text" id="team1" maxlength="20" placeholder="مثلاً: النمور" value="الفريق الأحمر">
                         </div>
                         <div class="vs-divider">VS</div>
                         <div class="input-group team-input team-b">
-                            <label for="team2">اسم الفريق الثاني</label>
+                            <label for="team2" data-i18n="team2Label">اسم الفريق الثاني</label>
                             <input type="text" id="team2" maxlength="20" placeholder="مثلاً: الصقور" value="الفريق الأزرق">
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="card-title"><span>⏱️</span> مدة الجولة</h3>
+                    <h3 class="card-title"><span>⏱️</span> <span data-i18n="cardDuration">مدة الجولة</span></h3>
                     <div class="option-row" id="duration-options">
                         <button class="option-btn" data-duration="30">
                             <span class="option-number">30</span>
-                            <span class="option-label">ثانية</span>
+                            <span class="option-label" data-i18n="secLabel">ثانية</span>
                         </button>
                         <button class="option-btn active" data-duration="45">
                             <span class="option-number">45</span>
-                            <span class="option-label">ثانية</span>
+                            <span class="option-label" data-i18n="secLabel">ثانية</span>
                         </button>
                         <button class="option-btn" data-duration="60">
                             <span class="option-number">60</span>
-                            <span class="option-label">ثانية</span>
+                            <span class="option-label" data-i18n="secLabel">ثانية</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="card-title"><span>🔄</span> عدد الجولات</h3>
+                    <h3 class="card-title"><span>🔄</span> <span data-i18n="cardRounds">عدد الجولات</span></h3>
                     <div class="option-row" id="rounds-options">
                         <button class="option-btn" data-rounds="2">
                             <span class="option-number">2</span>
-                            <span class="option-label">جولات</span>
+                            <span class="option-label" data-i18n="roundsLabel">جولات</span>
                         </button>
                         <button class="option-btn active" data-rounds="4">
                             <span class="option-number">4</span>
-                            <span class="option-label">جولات</span>
+                            <span class="option-label" data-i18n="roundsLabel">جولات</span>
                         </button>
                         <button class="option-btn" data-rounds="6">
                             <span class="option-number">6</span>
-                            <span class="option-label">جولات</span>
+                            <span class="option-label" data-i18n="roundsLabel">جولات</span>
                         </button>
                         <button class="option-btn" data-rounds="8">
                             <span class="option-number">8</span>
-                            <span class="option-label">جولات</span>
+                            <span class="option-label" data-i18n="roundsLabel">جولات</span>
                         </button>
                     </div>
                 </div>
 
                 <button class="btn btn-primary btn-large" data-action="go-categories">
-                    <span>التالي: اختر الفئة</span>
+                    <span data-i18n="btnNextCategory">التالي: اختر الفئة</span>
                     <span class="btn-arrow">←</span>
                 </button>
             </div>
@@ -142,7 +147,7 @@
         <section class="screen" id="screen-categories">
             <div class="screen-header">
                 <button class="back-btn" data-action="go-setup">→</button>
-                <h2>اختر الفئة</h2>
+                <h2 data-i18n="categoriesTitle">اختر الفئة</h2>
             </div>
 
             <div class="categories-grid" id="categories-grid">
@@ -153,15 +158,15 @@
         <!-- ============ READY SCREEN ============ -->
         <section class="screen" id="screen-ready">
             <div class="ready-content">
-                <div class="round-badge">الجولة <span id="ready-round">1</span> من <span id="ready-total">4</span></div>
-                <p class="ready-text">استعدوا!</p>
+                <div class="round-badge" id="ready-round-badge">الجولة 1 من 4</div>
+                <p class="ready-text" data-i18n="readyGetReady">استعدوا!</p>
                 <div class="current-team-card" id="ready-team-card">
                     <div class="team-avatar" id="ready-avatar">🔥</div>
                     <h2 class="current-team-name" id="ready-team-name">الفريق الأحمر</h2>
-                    <p class="ready-instructions">اختاروا ممثلاً يقوم بالتمثيل،<br>والباقي يحاولون التخمين</p>
+                    <p class="ready-instructions" data-i18n-html="readyInstructions">اختاروا ممثلاً يقوم بالتمثيل،<br>والباقي يحاولون التخمين</p>
                 </div>
                 <button class="btn btn-primary btn-large pulse" data-action="start-turn">
-                    <span>ابدأ الدور</span>
+                    <span data-i18n="btnStartTurn">ابدأ الدور</span>
                     <span class="btn-arrow">←</span>
                 </button>
             </div>
@@ -171,7 +176,7 @@
         <section class="screen" id="screen-countdown">
             <div class="countdown-content">
                 <div class="countdown-number" id="countdown-num">3</div>
-                <p class="countdown-label">استعد...</p>
+                <p class="countdown-label" data-i18n="countdownLabel">استعد...</p>
             </div>
         </section>
 
@@ -183,7 +188,7 @@
                     <span id="game-team-name">الفريق الأحمر</span>
                 </div>
                 <div class="game-score-badge">
-                    <span>النقاط</span>
+                    <span data-i18n="scoreLabel">النقاط</span>
                     <strong id="game-score">0</strong>
                 </div>
             </div>
@@ -203,11 +208,11 @@
             <div class="game-buttons">
                 <button class="game-btn skip-btn" data-action="skip-word">
                     <span class="game-btn-icon">⏭</span>
-                    <span>تخطي</span>
+                    <span data-i18n="btnSkip">تخطي</span>
                 </button>
                 <button class="game-btn correct-btn" data-action="correct-word">
                     <span class="game-btn-icon">✓</span>
-                    <span>صح</span>
+                    <span data-i18n="btnCorrect">صح</span>
                 </button>
             </div>
         </section>
@@ -215,30 +220,28 @@
         <!-- ============ SCOREBOARD SCREEN ============ -->
         <section class="screen" id="screen-scoreboard">
             <div class="scoreboard-content">
-                <div class="round-result-badge">انتهت الجولة <span id="sb-round">1</span></div>
-                <h2 class="scoreboard-title">النتائج حتى الآن</h2>
+                <div class="round-result-badge" id="sb-round-badge">انتهت الجولة 1</div>
+                <h2 class="scoreboard-title" data-i18n="scoreboardTitle">النتائج حتى الآن</h2>
 
                 <div class="score-cards">
                     <div class="score-card" id="sb-team1-card">
                         <div class="score-card-avatar">🔥</div>
                         <div class="score-card-name" id="sb-team1-name">الفريق الأحمر</div>
                         <div class="score-card-score" id="sb-team1-score">0</div>
-                        <div class="score-card-label">نقطة</div>
+                        <div class="score-card-label" data-i18n="scoreUnit">نقطة</div>
                     </div>
                     <div class="score-card" id="sb-team2-card">
                         <div class="score-card-avatar">💧</div>
                         <div class="score-card-name" id="sb-team2-name">الفريق الأزرق</div>
                         <div class="score-card-score" id="sb-team2-score">0</div>
-                        <div class="score-card-label">نقطة</div>
+                        <div class="score-card-label" data-i18n="scoreUnit">نقطة</div>
                     </div>
                 </div>
 
-                <div class="round-summary" id="round-summary">
-                    سجل الفريق <strong id="sb-this-team">—</strong> هذه الجولة <strong id="sb-this-points">0</strong> نقطة!
-                </div>
+                <div class="round-summary" id="round-summary"></div>
 
                 <button class="btn btn-primary btn-large" data-action="next-turn" id="sb-continue-btn">
-                    <span>المتابعة</span>
+                    <span id="sb-continue-span" data-i18n="btnContinue">المتابعة</span>
                     <span class="btn-arrow">←</span>
                 </button>
             </div>
@@ -249,7 +252,7 @@
             <div class="end-content">
                 <div class="confetti" id="confetti"></div>
                 <div class="trophy">🏆</div>
-                <p class="end-label">الفائز</p>
+                <p class="end-label" data-i18n="winnerLabel">الفائز</p>
                 <h2 class="winner-name" id="winner-name">الفريق الأحمر</h2>
                 <div class="winner-score" id="winner-score">12 نقطة</div>
 
@@ -267,11 +270,11 @@
                 <div class="end-buttons">
                     <button class="btn btn-primary btn-large" data-action="restart-same">
                         <span>🔄</span>
-                        <span>إعادة بنفس الإعدادات</span>
+                        <span data-i18n="btnRestart">إعادة بنفس الإعدادات</span>
                     </button>
                     <button class="btn btn-ghost" data-action="go-home">
                         <span>🏠</span>
-                        <span>الصفحة الرئيسية</span>
+                        <span data-i18n="btnHome">الصفحة الرئيسية</span>
                     </button>
                 </div>
             </div>
