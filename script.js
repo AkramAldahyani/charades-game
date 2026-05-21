@@ -61,6 +61,9 @@ const STRINGS = {
         backArrow: '→',
         fwdArrow: '←',
         pageTitle: 'مثّلها - لعبة التمثيل الصامت',
+        sbTurnEnded: (team) => `انتهى دور ${team}`,
+        ariaBack: 'رجوع',
+        ariaClose: 'إغلاق',
     },
     en: {
         gameTitle: 'Act It Out!',
@@ -118,6 +121,9 @@ const STRINGS = {
         backArrow: '←',
         fwdArrow: '→',
         pageTitle: 'Act It Out! - Charades Game',
+        sbTurnEnded: (team) => `End of ${team}'s turn`,
+        ariaBack: 'Back',
+        ariaClose: 'Close',
     }
 };
 
@@ -333,6 +339,8 @@ const state = {
 const $ = (id) => document.getElementById(id);
 const $$ = (sel) => document.querySelectorAll(sel);
 
+const LS_LANG_KEY = 'charades-lang';
+
 function s() { return STRINGS[state.lang]; }
 
 function getWords() {
@@ -343,11 +351,23 @@ function getCategories() {
     return state.lang === 'ar' ? CATEGORIES : CATEGORIES_EN;
 }
 
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+}
+
+function vibrate(pattern) {
+    if (navigator.vibrate) {
+        try { navigator.vibrate(pattern); } catch (_) {}
+    }
+}
+
 function showScreen(id) {
     $$('.screen').forEach(sc => sc.classList.remove('active'));
     const target = $(id);
     if (target) target.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
 }
 
 function showToast(msg, ms = 1800) {
@@ -370,6 +390,7 @@ function shuffle(arr) {
 // ============ LANGUAGE ============
 function applyLanguage(lang) {
     state.lang = lang;
+    try { localStorage.setItem(LS_LANG_KEY, lang); } catch (_) {}
     const str = STRINGS[lang];
     const isRTL = lang === 'ar';
 
@@ -399,8 +420,12 @@ function applyLanguage(lang) {
     t2.placeholder = str.team2Placeholder;
 
     // Update directional arrows
-    $$('.back-btn').forEach(btn => { btn.textContent = str.backArrow; });
+    $$('.back-btn').forEach(btn => {
+        btn.textContent = str.backArrow;
+        btn.setAttribute('aria-label', str.ariaBack);
+    });
     $$('.btn-arrow').forEach(el => { el.textContent = str.fwdArrow; });
+    $$('.modal-close').forEach(btn => btn.setAttribute('aria-label', str.ariaClose));
 
     // Update lang toggle buttons
     $('lang-ar').classList.toggle('active', lang === 'ar');
@@ -616,6 +641,7 @@ function correctWord() {
     state.teams[state.currentTeamIdx].score++;
     state.roundScores[state.currentTeamIdx]++;
     $('game-score').textContent = state.teams[state.currentTeamIdx].score;
+    vibrate(40);
     const el = $('word-text');
     el.classList.add('flash-correct');
     setTimeout(() => nextWord(), 250);
@@ -623,6 +649,7 @@ function correctWord() {
 
 function skipWord() {
     if (state.timeLeft <= 0) return;
+    vibrate(20);
     const el = $('word-text');
     el.classList.add('flash-skip');
     setTimeout(() => nextWord(), 200);
@@ -638,6 +665,7 @@ function nextWord() {
 }
 
 function endTurn() {
+    vibrate([60, 60, 120]);
     state.turnsThisRound++;
     showScoreboard();
 }
@@ -648,7 +676,6 @@ function showScoreboard() {
     const t2 = state.teams[1];
     const str = s();
 
-    $('sb-round-badge').textContent = str.sbRoundBadge(state.currentRound);
     $('sb-team1-name').textContent = t1.name;
     $('sb-team2-name').textContent = t2.name;
     $('sb-team1-score').textContent = t1.score;
@@ -661,7 +688,12 @@ function showScoreboard() {
 
     const team = state.teams[state.currentTeamIdx];
     const points = state.roundScores[state.currentTeamIdx];
-    $('round-summary').innerHTML = str.roundSummary(team.name, points);
+    $('round-summary').innerHTML = str.roundSummary(escapeHTML(team.name), points);
+
+    const isHalfRound = state.turnsThisRound < 2;
+    $('sb-round-badge').textContent = isHalfRound
+        ? str.sbTurnEnded(team.name)
+        : str.sbRoundBadge(state.currentRound);
 
     const isGameOver = (state.turnsThisRound >= 2 && state.currentRound >= state.totalRounds);
     $('sb-continue-span').textContent = isGameOver ? str.btnFinalResults : str.btnContinue;
@@ -769,10 +801,13 @@ function handleAction(e) {
 function onKey(e) {
     const isGame = $('screen-game').classList.contains('active');
     if (isGame && state.timeLeft > 0) {
-        if (e.key === 'ArrowRight' || e.code === 'Space' || e.key === 'Enter') {
+        const isRTL = state.lang === 'ar';
+        const correctArrow = isRTL ? 'ArrowLeft' : 'ArrowRight';
+        const skipArrow = isRTL ? 'ArrowRight' : 'ArrowLeft';
+        if (e.key === correctArrow || e.code === 'Space' || e.key === 'Enter') {
             e.preventDefault();
             correctWord();
-        } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+        } else if (e.key === skipArrow || e.key === 'Backspace') {
             e.preventDefault();
             skipWord();
         }
@@ -782,15 +817,53 @@ function onKey(e) {
     }
 }
 
+// ============ PAUSE ON HIDDEN TAB ============
+let pausedByVisibility = false;
+
+function onVisibilityChange() {
+    const onGame = $('screen-game').classList.contains('active');
+    if (document.hidden) {
+        if (state.timerId) {
+            stopTimer();
+            pausedByVisibility = true;
+        }
+    } else if (pausedByVisibility && onGame && state.timeLeft > 0) {
+        pausedByVisibility = false;
+        startTimer();
+    }
+}
+
 // ============ INIT ============
+function loadSavedLanguage() {
+    try {
+        const v = localStorage.getItem(LS_LANG_KEY);
+        if (v === 'ar' || v === 'en') return v;
+    } catch (_) {}
+    return 'ar';
+}
+
+function setupTeamInputs() {
+    [$('team1'), $('team2')].forEach(input => {
+        if (!input) return;
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                goCategories();
+            }
+        });
+    });
+}
+
 function init() {
     document.body.addEventListener('click', handleAction);
     document.addEventListener('keydown', onKey);
+    document.addEventListener('visibilitychange', onVisibilityChange);
     $('modal-how').addEventListener('click', (e) => {
         if (e.target.id === 'modal-how') closeHow();
     });
     setupOptionButtons();
-    applyLanguage('ar');
+    setupTeamInputs();
+    applyLanguage(loadSavedLanguage());
     showScreen('screen-home');
 }
 
